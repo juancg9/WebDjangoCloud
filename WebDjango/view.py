@@ -14,6 +14,9 @@ def homePage(self):
     documento = planilla.render(data)       # la opcion render es para dibujar o mostrar algo y se muestra lo q este en parentesis
     return HttpResponse(documento)
 
+def inicio(self):
+    return HttpResponse(f'Hola soy inicio de WebDjango')
+
 def cursos(self):
     #planilla = loader.get_template('cursos.html')
     curso = Curso(nombre='XU/XI', camada='12345')
