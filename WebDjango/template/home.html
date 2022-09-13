@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django | Home</title>
+</head>
+<body>
+    Soy la Home Page :D
+    <br>                                <!-- este comando hace un salto de linea -->
+    Hola {{nombre}} {{apellido}}        <!-- corresponde a un Diccionario preguntado en doble llaves por la clave para que arroje el valor -->
+
+    {%for n in lista%}                 <!-- para usar codigo de Python en html se debe colocar dentro de corchete y porcentaje -->
+        {{n}}                           <!-- las variables van en doble corchete-->
+        <br>     
+    {%endfor%}                        <!-- se termina el for -->
+
+</body>
+</html>
