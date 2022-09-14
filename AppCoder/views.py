@@ -18,3 +18,6 @@ def estudiantes(request):
 
 def entregables(request):
     return render(request, "entregables.html")
+
+def home(request):
+    return render(request, "home.html")
