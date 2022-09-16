@@ -6,13 +6,37 @@
 {% block contenido %}   <!-- trae el codigo del contenido bloqueado en home.html despues del nav -->
     <p> Hola soy un estudiante </p>
     <div class="contenidoEstudiantes">  <!-- class da formato y se pueden repetir en el codigo -->
-        <form class="formDataEstudiante">   <!-- formato sirve para pedir informacion -->
-            <p>Nombre: <input type="text"> </p>
-            <input type="text" placeholder="Apellido">    <!-- placeholder es un mensaje fantasma -->
-            <input type="password" placeholder="Password">
-            <input type="email" placeholder="email">  
-        </form>
+        <form class="formDataEstudiante" action="/AppCoder/estudiantes/" method="POST"> {% csrf_token %}   <!-- envio info a la DB cuando se presiona el boton -->
+            <input type="text" name="nombre" placeholder="nombre">    <!-- placeholder es un mensaje fantasma -->
+            <input type="text" name="apellido" placeholder="apellido"> 
+            <input type="email" name="email" placeholder="email">  
+            <button type="submit" class="btn btn-primary btndj">Registrar</button> <!-- con submit toma los valores del formlario (nombre, apellido, email) y los  envia a la DB -->
 
+        </form>
+    </div>
+
+    <div>
+        <form class="formDataEstudiante" action="/AppCoder/buscar_estudiante/" method="GET">   <!-- trae info a la DB cuando se presiona el boton -->
+            <input type="email" name="email" placeholder="email">  
+            <button type="submit" class="btn btn-primary btndj">Buscar</button> <!-- con submit toma los valores del formlario (nombre, apellido, email) y los  envia a la DB -->
+        </form>
+    </div>
+
+    <div>
+        {% if estudiantes %}
+        <ul>
+            {% for estudiante in estudiantes %}
+            <li>
+                {{estudiante.nombre}}
+            </li>
+            <li></li>
+                {{estudiante.apellido}}
+            <li>
+                {{estudiante.email}}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %} 
     </div>
 
 {% endblock %}
