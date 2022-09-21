@@ -50,3 +50,59 @@ def buscar_estudiante(request):
     else:
         respuesta = "No enviaste datos"
     return HttpResponse(respuesta)
+
+
+def create_estudiantes(request):
+    if request.method == 'POST':
+        estudiante = Estudiante(nombre = request.POST['nombre'], apellido = request.POST['apellido'], email = request.POST['email'])
+        estudiante.save()     
+        estudiantes = Estudiante.objects.all()   # trae toda la info 
+        return render(request, "estudiantesCRUD/read_estudiantes.html", {"estudiantes": estudiantes}) 
+
+    return render(request, "estudiantesCRUD/create_estudiantes.html")
+
+def read_estudiantes(request):
+    estudiantes = Estudiante.objects.all()   # trae toda la info 
+    return render(request, "estudiantesCRUD/read_estudiantes.html", {"estudiantes": estudiantes})
+
+# def update_estudiantes(request, estudiante_id):
+#     estudiante = Estudiante.objects.get(id = estudiante_id)
+#     if request.method == 'POST':
+#         formulario = form_estudiantes(request.POST)
+
+#         if formulario.is_valid():
+#             informacion = formulario.cleaned_data
+#             estudiante.nombre = informacion["nombre"]
+#             estudiante.apellido = informacion["apellido"]
+#             estudiante.email = informacion["email"]
+#             estudiante.save()
+#             estudiantes = Estudiante.objects.all()   # trae toda la info 
+#             return render(request, "estudiantesCRUD/read_estudiantes.html", {"estudiantes": estudiantes})
+#     else:
+#         form = form_estudiantes(initial={'nombre': estudiante.nombre, 'apellido': estudiante.apellido, 'email': estudiante.email})
+#     return render(request, "estudiantesCRUD/update_estudiantes.html", {"formulario": formulario})
+
+def update_estudiantes(request, estudiante_id):
+    estudiante = Estudiante.objects.get(id = estudiante_id)
+
+    if request.method == 'POST':
+        formulario = form_estudiantes(request.POST)
+
+        if formulario.is_valid():
+            informacion = formulario.cleaned_data
+            estudiante.nombre = informacion['nombre']
+            estudiante.apellido = informacion['apellido']
+            estudiante.email = informacion['email']
+            estudiante.save()
+            estudiantes = Estudiante.objects.all() #Trae toda la info
+            return render(request, "estudiantesCRUD/read_estudiantes.html", {"estudiantes": estudiantes})
+    else:
+        formulario = form_estudiantes(initial={'nombre': estudiante.nombre, 'apellido': estudiante.apellido, 'email': estudiante.email})
+    return render(request,"estudiantesCRUD/update_estudiantes.html", {"formulario": formulario})
+
+
+def delete_estudiantes(request, estudiante_id):
+    estudiante = Estudiante.objects.get(id = estudiante_id)      # a la variable estudiante del momdelo Estudiante se le asigna (get) la variable email que viene por referencia
+    estudiante.delete()
+    estudiantes = Estudiante.objects.all()
+    return render(request, "estudiantesCRUD/read_estudiantes.html", {"estudiantes": estudiantes})

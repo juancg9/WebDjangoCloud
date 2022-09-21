@@ -1,0 +1,12 @@
+{% load static %}
+
+<link rel="stylesheet" href="{%static 'css/bootstrap.min.css'%}">
+<link rel="stylesheet" href="{%static 'css/myestilo.css'%}">
+
+<form class="formDataEstudiante" method="POST" action="/AppCoder/create_estudiantes/"> {% csrf_token %}  <!-- se toma el formulario creado que hace referencia al estilo css creado -->
+    <input type="text" name="nombre" placeholder="nombre">    <!-- placeholder es un mensaje fantasma -->
+    <input type="text" name="apellido" placeholder="apellido"> 
+    <input type="email" name="email" placeholder="email">  
+    <button type="submit" class="btn btn-primary btndj">Registrar</button> <!-- con submit toma los valores del formlario (nombre, apellido, email) y los  envia a la DB -->
+
+</form>
