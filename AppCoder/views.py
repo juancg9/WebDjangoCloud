@@ -1,10 +1,18 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from AppCoder.models import Estudiante
-from AppCoder.forms import form_estudiantes
+from AppCoder.forms import form_estudiantes, UserRegisterForm
+from django.views.generic import ListView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView
+
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm      #formularios propios de django para autenticacion de usuarios
+from django.contrib.auth import login, logout, authenticate         #formularios propios de django para autenticacion de usuarios
+from django.contrib.auth.decorators import login_required              
+
 
 def inicio(request):
     return render(request, "inicio.html")
@@ -15,6 +23,7 @@ def cursos(request):
 def profesores(request):  
     return render(request, "profesores.html")
 
+@login_required                                         # solo permite ingresar cuando se ha registrado el usuario
 def estudiantes(request):
     if request.method == "POST":
         estudiante = Estudiante(nombre=request.POST['nombre'], apellido=request.POST['apellido'], email=request.POST['email'])
@@ -24,6 +33,7 @@ def estudiantes(request):
 
 def entregables(request):
     return render(request, "entregables.html")
+
 
 def home(request):
     return render(request, "home.html")
@@ -65,22 +75,8 @@ def read_estudiantes(request):
     estudiantes = Estudiante.objects.all()   # trae toda la info 
     return render(request, "estudiantesCRUD/read_estudiantes.html", {"estudiantes": estudiantes})
 
-# def update_estudiantes(request, estudiante_id):
-#     estudiante = Estudiante.objects.get(id = estudiante_id)
-#     if request.method == 'POST':
-#         formulario = form_estudiantes(request.POST)
 
-#         if formulario.is_valid():
-#             informacion = formulario.cleaned_data
-#             estudiante.nombre = informacion["nombre"]
-#             estudiante.apellido = informacion["apellido"]
-#             estudiante.email = informacion["email"]
-#             estudiante.save()
-#             estudiantes = Estudiante.objects.all()   # trae toda la info 
-#             return render(request, "estudiantesCRUD/read_estudiantes.html", {"estudiantes": estudiantes})
-#     else:
-#         form = form_estudiantes(initial={'nombre': estudiante.nombre, 'apellido': estudiante.apellido, 'email': estudiante.email})
-#     return render(request, "estudiantesCRUD/update_estudiantes.html", {"formulario": formulario})
+
 
 def update_estudiantes(request, estudiante_id):
     estudiante = Estudiante.objects.get(id = estudiante_id)
@@ -101,8 +97,39 @@ def update_estudiantes(request, estudiante_id):
     return render(request,"estudiantesCRUD/update_estudiantes.html", {"formulario": formulario})
 
 
+
 def delete_estudiantes(request, estudiante_id):
     estudiante = Estudiante.objects.get(id = estudiante_id)      # a la variable estudiante del momdelo Estudiante se le asigna (get) la variable email que viene por referencia
     estudiante.delete()
     estudiantes = Estudiante.objects.all()
     return render(request, "estudiantesCRUD/read_estudiantes.html", {"estudiantes": estudiantes})
+
+def login_request(request):
+    if  request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.cleaned_data.get('username')
+            pwd = form.cleaned_data.get('password')
+            user = authenticate(username = user, password = pwd)
+
+            if user is not None:
+                login(request, user)
+                return render(request, "home.html")
+            else:
+                return render(request, "login.html", {'form':form})
+        else:
+            return render(request, "login.html", {'form':form})
+    form = AuthenticationForm()
+    return render(request, 'login.html', {'form':form})
+
+def registro(request):
+    if request.method == 'POST':
+        #form = UserCreationForm(request.POST)
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+           # username = form.cleaned_data["username"]
+            form.save()
+            return render(request, "inicio.html")
+    #form = UserCreationForm()
+    form = UserRegisterForm()
+    return render(request, 'registro.html', {'form':form})

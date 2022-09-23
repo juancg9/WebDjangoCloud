@@ -1,5 +1,6 @@
 from django.urls import path
 from AppCoder.views import *        # con * importa todas las clases que esten en views
+from django.contrib.auth.views import LogoutView    # logout por defecto de Django
 
 
 urlpatterns = [
@@ -15,5 +16,11 @@ urlpatterns = [
     path('read_estudiantes/', read_estudiantes),
     path('update_estudiantes/<estudiante_id>', update_estudiantes),
     path('delete_estudiantes/<estudiante_id>', delete_estudiantes),
+
+    path('login/', login_request),
+    path('registro/', registro),
+    path('logout/', LogoutView.as_view(template_name = 'inicio.html'), name="Logout"),
+
+    
     
 ]

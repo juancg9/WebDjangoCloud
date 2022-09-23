@@ -1,14 +1,17 @@
+{% extends "../home.html" %}
+
+
 {% load static %}
-
-{% for estudiante in estudiantes %}
 <link rel="stylesheet" href="{%static 'css/bootstrap.min.css'%}">
+{% block contenido %}
+    {% for estudiante in estudiantes %}
+        <li>  
+            {{ estudiante }}  
+            <a href="/AppCoder/update_estudiantes/{{estudiante.id}}" class="btn btn-warning">Edit</a>    <!-- la letra a es como un boton-->
+            <a href="/AppCoder/delete_estudiantes/{{estudiante.id}}" class="btn btn-danger">Delete</a>    <!-- la letra a es como un boton-->
+        </li>
+        <br>        <!-- espacio en html -->
+    {% endfor %}
 
-    <li>  
-        {{ estudiante }}  
-        <a href="/AppCoder/update_estudiantes/{{estudiante.id}}" class="btn btn-warning">Edit</a>    <!-- la letra a es como un boton-->
-        <a href="/AppCoder/delete_estudiantes/{{estudiante.id}}" class="btn btn-danger">Delete</a>    <!-- la letra a es como un boton-->
-    </li>
-    <br>        <!-- espacio en html -->
-{% endfor %}
-
-<a class="btn btn-success" href="/AppCoder/create_estudiantes/">Agregar Estudiante</a>   <!--  boton con vinculo a URL -->
+    <a class="btn btn-success" href="/AppCoder/create_estudiantes/">Agregar Estudiante</a>   <!--  boton con vinculo a URL -->
+{% endblock %}
