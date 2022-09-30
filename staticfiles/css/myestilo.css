@@ -1,0 +1,25 @@
+.contenido1{
+    position: relative;
+    top: 60px;
+    border: 1px solid red;
+}
+
+/* asd */
+.contenidoEstudiantes{
+    background-color: gray;
+    display: flex;          /* permite centrar algo en medio */
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.formDataEstudiantes{
+    display: flex;          /* permite centrar algo en medio */
+    align-items: column;
+    width: 500px;
+    gap: 10px;
+    background-color: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+

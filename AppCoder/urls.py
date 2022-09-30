@@ -20,6 +20,10 @@ urlpatterns = [
     path('login/', login_request),
     path('registro/', registro),
     path('logout/', LogoutView.as_view(template_name = 'inicio.html'), name="Logout"),
+    path('perfil/editarPerfil/', editarPerfil),
+    path('perfil/', perfilView),
+    path('perfil/changepass/', changepass),             # pagina a la que dirige, y funcion que llama
+    path('perfil/changeAvatar/', AgregarAvatar), 
 
     
     
