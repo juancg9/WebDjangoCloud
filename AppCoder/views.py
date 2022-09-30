@@ -9,7 +9,7 @@ from AppCoder.forms import form_estudiantes, UserRegisterForm, UserEditForm, Cha
 
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm     #formularios propios de django para autenticacion de usuarios
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash         #formularios propios de django para autenticacion de usuarios
@@ -34,8 +34,12 @@ def estudiantes(request):
     if request.method == "POST":
         estudiante = Estudiante(nombre=request.POST['nombre'], apellido=request.POST['apellido'], email=request.POST['email'])
         estudiante.save()
-        avatar = Avatar.objectsfil.filter(user = request.user.id)
-        return render(request, "home.html", {'avatar': avatar[0].image.url})
+        avatar = Avatar.objects.filter(user = request.user.id)
+        try:
+            avatar = avatar[0].image.url
+        except:
+            avatar = None
+        return render(request, 'home.html', {'avatar': avatar})
     return render(request, "estudiantes.html")
 
 def entregables(request):
@@ -48,7 +52,7 @@ def home(request):
         avatar = avatar[0].image.url
     except:
         avatar = None
-    return render(request, "home.html", {'avatar': avatar})
+    return render(request, "home.html", {'avatar':avatar})
 
 def api_estudiantes(request):
     if request.method == "POST":
@@ -117,11 +121,12 @@ def delete_estudiantes(request, estudiante_id):
     return render(request, "estudiantesCRUD/read_estudiantes.html", {"estudiantes": estudiantes})
 
 def login_request(request):
-    if  request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data = request.POST)
         if form.is_valid():
             user = form.cleaned_data.get('username')
             pwd = form.cleaned_data.get('password')
+
             user = authenticate(username = user, password = pwd)
 
             if user is not None:
@@ -131,19 +136,13 @@ def login_request(request):
                     avatar = avatar[0].image.url
                 except:
                     avatar = None
-                return render(request, "home.html", {'avatar': avatar})
+                return render(request, 'home.html', {'avatar': avatar})
             else:
-                avatar = Avatar.objects.filter(user = request.user.id)
-                try:
-                     avatar = avatar[0].image.url
-                except:
-                     avatar = None
-                return render(request, "home.html", {'form':form, 'avatar': avatar})
-                
+                return render(request, "login.html", {'form':form})
         else:
             return render(request, "login.html", {'form':form})
     form = AuthenticationForm()
-    return render(request, 'login.html', {'form':form})
+    return render(request, 'login.html', {'form': form})
 
 # def registro(request):
 #     if request.method == 'POST':
@@ -247,9 +246,35 @@ def perfilView(request):
     return render(request, "perfil.html", {'avatar': avatar})
     
     
+# def AgregarAvatar(request):
+#     if request.method == 'POST':
+#         form = AvatarFormulario(request.POST, request.FILES)
+#         if form.is_valid():
+#             user = User.objects.get(username = request.user)
+#             avatar = Avatar(user = user, image = form.cleaned_data['avatar'], id = request.user.id)
+#             avatar.save()
+#             avatar = Avatar.objects.filter(user = request.user.id)
+#             try:
+#                 avatar = avatar[0].image.url
+#             except:
+#                 avatar = None
+#             return render(request, "home.html", {'avatar': avatar})
+#     else:
+#         try:
+#             avatar = Avatar.objects.filter(user = request.user.id)
+#             form = AvatarFormulario()
+#         except:
+#             form = AvatarFormulario()
+#     return render(request, "AgregarAvatar.html", {'fomr': form})
+
+
+
+@login_required
 def AgregarAvatar(request):
     if request.method == 'POST':
         form = AvatarFormulario(request.POST, request.FILES)
+        print(form)
+        print(form.is_valid())
         if form.is_valid():
             user = User.objects.get(username = request.user)
             avatar = Avatar(user = user, image = form.cleaned_data['avatar'], id = request.user.id)
@@ -258,15 +283,15 @@ def AgregarAvatar(request):
             try:
                 avatar = avatar[0].image.url
             except:
-                avatar = None
-            return render(request, "home.html", {'avatar': avatar})
+                avatar = None           
+            return render(request, 'home.html', {'avatar': avatar})
     else:
         try:
             avatar = Avatar.objects.filter(user = request.user.id)
             form = AvatarFormulario()
         except:
             form = AvatarFormulario()
-    return render(request, "AgregarAvatar.html", {'fomr': form})
+    return render(request, 'AgregarAvatar.html', {'form': form})
 
 
 # def AgregarAvatar(request):

@@ -1,3 +1,4 @@
+from re import template
 from django.urls import path
 from AppCoder.views import *        # con * importa todas las clases que esten en views
 from django.contrib.auth.views import LogoutView    # logout por defecto de Django
@@ -23,8 +24,8 @@ urlpatterns = [
     path('perfil/editarPerfil/', editarPerfil),
     path('perfil/', perfilView),
     path('perfil/changepass/', changepass),             # pagina a la que dirige, y funcion que llama
-    path('perfil/changeAvatar/', AgregarAvatar), 
+    path('perfil/changeAvatar/', AgregarAvatar)
 
     
-    
+
 ]
