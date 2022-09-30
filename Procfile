@@ -1,1 +1,1 @@
-web: guicorn WebDjango.wsgi
+web: gunicorn WebDjango.wsgi
